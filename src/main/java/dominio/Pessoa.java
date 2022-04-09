@@ -1,7 +1,25 @@
 package dominio;
 
-public class Pessoa {
-	private int id;
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import persistencia.PessoaDAO;
+
+//Indicar que a classe é uma entidade
+@Entity
+public class Pessoa implements Serializable{
+	private static final long serialVersionUID = 1;
+	
+	//identifica a FK da entidade
+	@Id
+	//Ordena o banco de dados a gerar o id automaticamente
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
 	private String nome;
 	private String email;
 	
@@ -9,18 +27,18 @@ public class Pessoa {
 		
 	}
 
-	public Pessoa(int id, String nome, String email) {
+	public Pessoa(Integer id, String nome, String email) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -45,5 +63,16 @@ public class Pessoa {
 		return "Pessoa [id=" + id + ", nome=" + nome + ", email=" + email + "]";
 	}
 	
+	//Persistencia
+	public void gravarDados() {
+		new PessoaDAO().createTable(this);
+	}
 	
+	public void recuperarDados() {
+		System.out.println(new PessoaDAO().selectPessoa(this));
+	}
+	
+	public void excluirPessoa() {
+		new PessoaDAO().deletePessoa(this);
+	}
 }
